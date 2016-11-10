@@ -2,7 +2,7 @@
 var ws;
 
 try {
-    ws = new WebSocket("ws://localhost:49694/WebsocketHandler.ashx");
+    ws = new WebSocket("ws://localhost:49694/Handler1.ashx");
 
     ws.onerror = function () {
         console.log('Verbindung fehlgeschlagen');
