@@ -7,28 +7,29 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.WebSockets;
 
-namespace WebSocketServer
+namespace Turnierplaner
 {
     /// <summary>
-    /// Summary description for WebSocketRequestHandler1
+    /// Zusammenfassungsbeschreibung für Handler1
     /// </summary>
-    public class WebSocketRequestHandler1 : IHttpHandler
+    public class Handler1 : IHttpHandler
     {
         private static List<WebSocket> clients = new List<WebSocket>();
-
-
-        public bool IsReusable
-        {
-            // Return false in case your Managed Handler cannot be reused for another request.
-            // Usually this would be false in case you have some state information preserved per request.
-            get { return false; }
-        }
 
         public void ProcessRequest(HttpContext context)
         {
             if (context.IsWebSocketRequest)
                 context.AcceptWebSocketRequest(Answer);
         }
+
+        public bool IsReusable
+        {
+            get
+            {
+                return false;
+            }
+        }
+
 
         private async Task Answer(AspNetWebSocketContext con)
         {
@@ -43,11 +44,13 @@ namespace WebSocketServer
                 foreach (WebSocket client in clients)
                 {
                     if (!client.Equals(socket))
-                        await client.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
+                        await client.SendAsync(new ArraySegment<byte>(buffer.Array, 0, result.Count), WebSocketMessageType.Text, true, CancellationToken.None);
                 }
             }
 
             clients.Remove(socket);
         }
+
+
     }
 }
